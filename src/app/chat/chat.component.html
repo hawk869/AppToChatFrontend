@@ -1,1 +1,46 @@
-<p>chat works!</p>
+<div class="card mx-4 my-4">
+  <div class="card-header">
+    <ul class="nav nav-pills card-header-pills">
+      <li class="nav-item mx-4" *ngIf="!connected">
+        <input type="text" class="form-control" placeholder="Username ...." name="username"
+               [(ngModel)]="message.username">
+      </li>
+      <li class="nav-item mx-4">
+        <button (click)="connect()" class="btn btn-success" type="button"
+        *ngIf="!connected" [disabled]="!message.username">Connect</button>
+      </li>
+      <li class="nav-item">
+        <button (click)="disconnect()" class="btn btn-warning" type="button"
+        *ngIf="connected">Close Chat</button>
+      </li>
+    </ul>
+  </div>
+  <div #srollChat [scrollTop]="srollChat.scrollHeight" class="card-body" style="overflow-y: scroll; height: 360px;" *ngIf="connected">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item list-group-item-light" *ngFor="let message of messages">
+        <span *ngIf="message.type == 'NEW_USER'">{{ message.date | date: 'shortTime' }} @ {{ message.text }}
+          <span [ngStyle]="{'color': message.color}">{{ message.username }}</span>
+        </span>
+        <span *ngIf="message.type == 'MESSAGE'">{{ message.date | date: 'shortTime' }}
+          <span [ngStyle]="{'color': message.color}">{{ message.username }}</span> tells:<br> {{ message.text }}
+        </span>
+      </li>
+    </ul>
+  </div>
+  <div class="card-footer" *ngIf="connected">
+    <form class="form-inline">
+      <div class="row">
+        <div class="col form-group">
+          <input type="text" class="form-control" placeholder="Escribe un mensaje ..." name="texto"
+          [(ngModel)]="message.text" (keyup)="writtingEvent()">
+        </div>
+        <div class="col">
+          <button class="btn btn-primary" type="submit" (click)="sendMessage()">Send</button>
+        </div>
+      </div>
+    </form>
+    <div>
+      {{ writting }}
+    </div>
+  </div>
+</div>
